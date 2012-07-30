@@ -31,6 +31,8 @@ module SponsorPay
       @uri ||= "http://api.sponsorpay.com/feed/v1/offers.json?#{query_string}&hashkey=#{hashkey}"
     end
     def get
+      #TODO
+      #change it to EM::HttpRequest.new(url).get
       Net::HTTP.get_print URI.parse(self.uri)
     end
   end
