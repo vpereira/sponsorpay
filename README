@@ -1,0 +1,4 @@
+TO RUN THE TESTS
+
+IN THE PROJECT ROOT:
+rspec spec

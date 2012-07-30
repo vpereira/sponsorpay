@@ -1,6 +1,9 @@
 require 'digest/sha1'
+require 'net/http'
+require 'uri'
 
 module SponsorPay
+  #TODO API_KEY SHOULD BE PASSED AS PARAM TO THE CLASS
   API_KEY = "b07a12df7d52e6c118e5d47d3f9e60135b109a1f"
   class Request 
     attr_reader :uri,:query_string, :params, :hashkey
@@ -22,10 +25,13 @@ module SponsorPay
       }.join("&") 
     end
     def hashkey
-      @hashkey ||= Digest::SHA1.hexdigest query_string + "&#{API_KEY}"
+      @hashkey ||= Digest::SHA1.hexdigest self.query_string + "&#{API_KEY}"
     end
     def uri
       @uri ||= "http://api.sponsorpay.com/feed/v1/offers.json?#{query_string}&hashkey=#{hashkey}"
+    end
+    def get
+      Net::HTTP.get_print URI.parse(self.uri)
     end
   end
 end

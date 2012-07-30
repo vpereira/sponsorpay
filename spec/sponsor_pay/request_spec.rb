@@ -1,5 +1,4 @@
 require_relative '../spec_helper'
-require 'uri'
 
 describe SponsorPay::Request do
   context "default values" do
@@ -15,6 +14,13 @@ describe SponsorPay::Request do
     describe ".uri" do
       it { lambda { URI.parse(@request.uri) }.should_not raise_error }
       it { URI.parse(@request.uri).should_not be_nil }
+    end
+    
+    describe ".get" do
+      before do
+        Net::HTTP.stub!(:get_print).and_return(JSON.parse(File.open(File.join(File.dirname(__FILE__),'..','fixtures','response.json'),'r:utf-8').read))
+      end
+      it { @request.get.should be_a Hash }
     end
   end
   context "with specific uid" do
