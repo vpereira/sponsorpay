@@ -17,10 +17,23 @@ describe SponsorPay::Request do
     end
     
     describe ".get" do
-      before do
-        Net::HTTP.stub!(:get_print).and_return(JSON.parse(File.open(File.join(File.dirname(__FILE__),'..','fixtures','response.json'),'r:utf-8').read))
+      context "without EM" do
+      	before do
+        	Net::HTTP.stub!(:get_print).and_return(JSON.parse(File.open(File.join(File.dirname(__FILE__),'..','fixtures','response.json'),'r:utf-8').read))
+      	end
+      	it { @request.get.should be_a Hash }
       end
-      it { @request.get.should be_a Hash }
+      context "with EM" do
+	before do
+		EM::HttpRequest.stub_chain(:new,:get).and_return(JSON.parse(File.open(File.join(File.dirname(__FILE__),'..','fixtures','response.json'),'r:utf-8').read))
+	end
+	it {
+	  EM::run {
+	  	@request.get.should be_a Hash
+		EM::stop_event_loop
+	  }
+	}
+      end
     end
   end
   context "with specific uid" do

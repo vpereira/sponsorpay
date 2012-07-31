@@ -62,6 +62,7 @@ PLATFORMS
 
 DEPENDENCIES
   em-http-request
+  eventmachine
   goliath
   haml
   json

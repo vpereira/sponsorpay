@@ -1,6 +1,9 @@
+require "bundler/setup" 
 require 'digest/sha1'
 require 'net/http'
 require 'uri'
+require 'em-http'
+require 'eventmachine'
 
 module SponsorPay
   #TODO API_KEY SHOULD BE PASSED AS PARAM TO THE CLASS
@@ -31,9 +34,12 @@ module SponsorPay
       @uri ||= "http://api.sponsorpay.com/feed/v1/offers.json?#{query_string}&hashkey=#{hashkey}"
     end
     def get
-      #TODO
-      #change it to EM::HttpRequest.new(url).get
-      Net::HTTP.get_print URI.parse(self.uri)
+      if EM.reactor_running?
+      	EM::HttpRequest.new(URI.parse(self.uri)).get
+      else
+	#fallback to the good/old Net::HTTP
+      	Net::HTTP.get_print URI.parse(self.uri)
+      end
     end
   end
 end
