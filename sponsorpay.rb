@@ -7,6 +7,7 @@ require 'bundler'
 Bundler.setup
 Bundler.require
 require 'active_support/core_ext/hash/keys'
+require 'em-synchrony/em-http'
 require 'goliath/rack/templates'
 require File.join(File.dirname(__FILE__),"lib","sponsor_pay","request")
 
@@ -20,6 +21,7 @@ class ProcessRequest < Goliath::API
     params = env["params"] rescue {}
     params.symbolize_keys!
     http = SponsorPay::Request.new(params).get
+
     if http.response.empty? 
     	[200, {'X-SponsorPay' => 'Proxy','Content-Type' => 'text/html'}, haml(:notfound)]
     else

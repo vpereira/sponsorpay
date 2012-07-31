@@ -1,8 +1,5 @@
 %html
   %body
-    %h1 Results
-    %h2 Message
-      = response[:message]
-    %h2 Count
-      = response[:count]
+    %h1 Results #{response["count"]}
+    = response.inspect
 
