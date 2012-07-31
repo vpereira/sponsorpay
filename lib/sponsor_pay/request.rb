@@ -2,15 +2,16 @@ require "bundler/setup"
 require 'digest/sha1'
 require 'net/http'
 require 'uri'
-require 'em-http'
-require 'eventmachine'
+require 'bundler'
+Bundler.setup
+Bundler.require
 
 module SponsorPay
   #TODO API_KEY SHOULD BE PASSED AS PARAM TO THE CLASS
   API_KEY = "b07a12df7d52e6c118e5d47d3f9e60135b109a1f"
   class Request 
     attr_reader :uri,:query_string, :params, :hashkey
-    def initialize(params = {})
+    def initialize(params = {} )
       @params = {
         appid: "157",
         format: "json",

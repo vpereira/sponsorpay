@@ -1,3 +1,12 @@
 %html
   %body 
-    %h1 FOO
+    %h1 SEND FORM
+    %form{:name=>"process", :id=>"process",:action=>"/process",:method=>"post"}
+      %p
+        %label{:for=>"uid"} UID:
+        %input{:type=>"text",:name=>"uid"}
+      %p
+        %label{:for=>"pub0"} Pub0:
+        %input{:type=>"text",:name=>"pub0"}
+      %p
+        %input{:type => "submit", :value => "Send"}

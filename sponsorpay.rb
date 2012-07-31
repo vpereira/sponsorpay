@@ -2,14 +2,11 @@
 
 # Rewrites and proxies requests to a third-party API, with HTTP basic authentication.
 
-require "rubygems"
 require "bundler/setup"
-require 'goliath'
-require 'em-synchrony/em-http'
-require 'active_support'
-require 'active_support/hash_with_indifferent_access'
-require 'json'
-require 'haml'
+require 'bundler'
+Bundler.setup
+Bundler.require
+require 'active_support/core_ext/hash/keys'
 require 'goliath/rack/templates'
 require File.join(File.dirname(__FILE__),"lib","sponsor_pay","request")
 
@@ -19,7 +16,8 @@ class ProcessRequest < Goliath::API
   use Goliath::Rack::Render 
 
   def response(env)
-    params = ActiveSupport::HashWithIndifferentAccess.new(env)[:params] rescue {}
+    params = env["params"] rescue {}
+    params.symbolize_keys!
     http = SponsorPay::Request.new(params).get
     [200, {'X-SponsorPay' => 'Proxy','Content-Type' => 'application/json'}, http.response]
   end
@@ -37,10 +35,12 @@ end
 class SponsorPayHandler < Goliath::API
   map "/", RenderIndex
   #TODO check the param2 in the documentation
-  map "/:uid/:param2",ProcessRequest
+  post "/process",ProcessRequest
 end
 
-runner = Goliath::Runner.new(ARGV, nil)
-runner.api = SponsorPayHandler.new
-runner.app = Goliath::Rack::Builder.build(SponsorPayHandler, runner.api)
-runner.run
+if __FILE__ == $0
+  runner = Goliath::Runner.new(ARGV, nil)
+  runner.api = SponsorPayHandler.new
+  runner.app = Goliath::Rack::Builder.build(SponsorPayHandler, runner.api)
+  runner.run
+end
