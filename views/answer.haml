@@ -1,5 +1,11 @@
 %html
   %body
     %h1 Results #{response["count"]}
-    = response.inspect
-
+    - response["offers"].each do |offer|
+      %div{:class=>'offer'}
+        %div{:class=>'title'}
+          = offer["title"]
+        %div{:class=>'payout'}
+          = offer["payout"]
+        %div{:class=>'thumbnail'}
+          = offer["thumbnail"]["lowres"]
