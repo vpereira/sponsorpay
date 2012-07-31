@@ -14,12 +14,17 @@ class ProcessRequest < Goliath::API
   use Goliath::Rack::Params
   use Goliath::Rack::JSONP
   use Goliath::Rack::Render 
+  include Goliath::Rack::Templates
 
   def response(env)
     params = env["params"] rescue {}
     params.symbolize_keys!
     http = SponsorPay::Request.new(params).get
-    [200, {'X-SponsorPay' => 'Proxy','Content-Type' => 'application/json'}, http.response]
+    if http.response.empty? 
+    	[200, {'X-SponsorPay' => 'Proxy','Content-Type' => 'text/html'}, haml(:notfound)]
+    else
+    	[200, {'X-SponsorPay' => 'Proxy','Content-Type' => 'text/html'}, haml(:answer,:locals=>{:response=>JSON.parse(http.response)})]
+    end
   end
 
 end
