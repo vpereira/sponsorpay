@@ -1,5 +1,6 @@
 require_relative '../spec_helper'
 
+
 describe SponsorPay::Request do
   context "default values" do
     before do
@@ -19,7 +20,7 @@ describe SponsorPay::Request do
     describe ".get" do
       context "without EM" do
       	before do
-        	Net::HTTP.stub!(:get_print).and_return(JSON.parse(File.open(File.join(File.dirname(__FILE__),'..','fixtures','response.json'),'r:utf-8').read))
+        	Net::HTTP.stub!(:get).and_return(JSON.parse(File.open(File.join(File.dirname(__FILE__),'..','fixtures','response.json'),'r:utf-8').read))
       	end
       	it { @request.get.should be_a Hash }
       end
@@ -30,7 +31,7 @@ describe SponsorPay::Request do
 	it {
 	  EM::run {
 	  	@request.get.should be_a Hash
-		EM::stop_event_loop
+		EM::stop
 	  }
 	}
       end

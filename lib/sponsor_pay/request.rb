@@ -38,7 +38,7 @@ module SponsorPay
       	EM::HttpRequest.new(URI.parse(self.uri)).get
       else
 	#fallback to the good/old Net::HTTP
-      	Net::HTTP.get_print URI.parse(self.uri)
+      	Net::HTTP.get URI.parse(self.uri)
       end
     end
   end

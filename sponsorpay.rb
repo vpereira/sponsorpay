@@ -16,8 +16,8 @@ class SponsorPayHandler < Goliath::API
 
   
   def response(env)
-    #SponsorPay::Request.new(params).get
-    #http = EM::HttpRequest.new(url).get head: HEADERS
-    [200, {'X-Goliath' => 'Proxy','Content-Type' => 'application/json'}, {:foo=>"bar"}.to_json]
+    params = {}
+    http = SponsorPay::Request.new(params).get
+    [200, {'X-SponsorPay' => 'Proxy','Content-Type' => 'application/json'}, http.response]
   end
 end
