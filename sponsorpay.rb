@@ -34,7 +34,6 @@ end
 
 class SponsorPayHandler < Goliath::API
   map "/", RenderIndex
-  #TODO check the param2 in the documentation
   post "/process",ProcessRequest
 end
 
